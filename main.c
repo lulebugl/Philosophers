@@ -18,28 +18,31 @@ void	usage(void)
 <time_to_eat> <time_to_sleep> [number_of_times_each_philosopher_must_eat]\n");
 }
 
-static int msg(const char *msg)
+static int	parse_arg(t_data *data, int argc, char **argv)
 {
-	printf(msg, MAX_PHILOS);
-	return (-1);
-}
+	int	i;
 
-static int init_data(t_data *data, char **argv)
-{
+	i = 0;
 	memset(data, 0, sizeof(t_data));
-	data->nb_philo = (unsigned int)ft_atol(argv[1]);
-	if (data->nb_philo < 1 || data->nb_philo > MAX_PHILOS)
+	while (++i < argc)
+		if (!contains_only_digits(argv[i]))
+			return (msg("Parameters can only be positive numbers.\n"));
+	data->nb_philo = simple_atoi(argv[1]);
+	if (data->nb_philo <= 0 || data->nb_philo > MAX_PHILOS)
 		return (msg(INVALID_PHILO_INPUT));
+	data->time_to_die = simple_atoi(argv[2]);
+	if (data->time_to_die <= 0)
+		return (msg("time to die must be a positive integer between 1 and 2147483647.\n"));
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	t_data data;
-	
+	t_data	data;
+
 	if (argc > 4)
 	{
-		init_data(&data, argv);
+		parse_arg(&data, argc, argv);
 		return (0);
 	}
 	usage();

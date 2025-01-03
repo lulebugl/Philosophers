@@ -23,7 +23,8 @@
 
 /** Macros **/
 # define MAX_PHILOS 250
-# define INVALID_PHILO_INPUT "usage : There must be between 1 and \
+# define INVALID_PHILO_INPUT \
+	"usage : There must be between 1 and \
 %d philosophers.\n"
 
 typedef struct s_data
@@ -34,8 +35,10 @@ typedef struct s_data
 	unsigned int	must_eat;
 }					t_data;
 
-long				ft_atol(const char *str);
+int	simple_atoi(const char *str);
 size_t				ft_strlen(const char *s);
+int					contains_only_digits(char *str);
+int					msg(const char *msg);
 
 #endif
 
