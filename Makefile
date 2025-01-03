@@ -24,7 +24,8 @@ endif
 OBJ_PATH = objs/
 
 SRCS		=	main.c \
-
+				utils.c
+				
 # SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRCS:.c=.o)
 OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))

@@ -12,6 +12,15 @@
 
 #include "philo.h"
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	while (++s)
+		i++;
+	return (i);
+}
+
 long	ft_atol(const char *str)
 {
 	long long	res;
