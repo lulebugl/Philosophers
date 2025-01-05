@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-int msg(const char *msg)
+int	msg(const char *msg)
 {
 	printf(msg, MAX_PHILOS);
 	return (-1);
@@ -45,7 +45,7 @@ size_t	ft_strlen(const char *s)
 int	simple_atoi(const char *str)
 {
 	unsigned long long	res;
-	int			i;
+	int					i;
 
 	i = 0;
 	res = 0;
@@ -61,10 +61,10 @@ int	simple_atoi(const char *str)
 			i++;
 		}
 		else
-			return (0);
+			return (-1);
 	}
 	if (res > INT_MAX)
-		return (0);
+		return (-1);
 	return ((int)res);
 }
 
