@@ -24,15 +24,22 @@ static int	parse_arg(t_data *data, int argc, char **argv)
 
 	i = 0;
 	memset(data, 0, sizeof(t_data));
-	while (++i < argc)
-		if (!contains_only_digits(argv[i]))
-			return (msg("Parameters can only be positive numbers.\n"));
+	// while (++i < argc)
+	// 	if (!contains_only_digits(argv[i]))
+	// 		return (msg("Parameters can only be digits.\n"));
 	data->nb_philo = simple_atoi(argv[1]);
 	if (data->nb_philo <= 0 || data->nb_philo > MAX_PHILOS)
 		return (msg(INVALID_PHILO_INPUT));
 	data->time_to_die = simple_atoi(argv[2]);
 	if (data->time_to_die <= 0)
-		return (msg("time to die must be a positive integer between 1 and 2147483647.\n"));
+		return (msg("<time to die> must be a positive integer between 1 and 2147483647.\n"));
+	data->time_to_eat = simple_atoi(argv[3]);
+	if (data->time_to_eat <= 0)
+		return (msg("<time to eat> must be a positive integer between 1 and 2147483647.\n"));
+	data->time_to_sleep = simple_atoi(argv[4]);
+	if (data->time_to_sleep <= 0)
+		return (msg("<time to sleep> must be a positive integer between 1 and 2147483647.\n"));
+	printf("nb of philo: %u, die: %u, eat: %u, sleep: %u, must_eat: %u\n", data->nb_philo, data->time_to_die, data->time_to_eat, data->time_to_sleep, data->must_eat);
 	return (0);
 }
 
@@ -48,3 +55,4 @@ int	main(int argc, char **argv)
 	usage();
 	return (0);
 }
+

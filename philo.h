@@ -31,6 +31,7 @@ typedef struct s_data
 {
 	unsigned int	nb_philo;
 	unsigned int	time_to_die;
+	unsigned int	time_to_eat;
 	unsigned int	time_to_sleep;
 	unsigned int	must_eat;
 }					t_data;
