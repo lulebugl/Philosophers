@@ -53,6 +53,13 @@ static int	parse_args(t_data *data, int argc, char **argv)
 
 int	launch_routine(t_data *data)
 {
+ 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
+  	if (!data->forks)
+    	return (1);
+  	data->philo = malloc(sizeof(t_philo) * data->nb_philo);
+    if (!data->philo)
+        return (1);
+    
 	return (0);
 }
 

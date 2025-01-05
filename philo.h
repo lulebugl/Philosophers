@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <time.h>
 
 /** Macros **/
 # define MAX_PHILOS 250
@@ -47,7 +48,7 @@ typedef struct s_data
 	unsigned int	time_to_eat;
 	unsigned int	time_to_sleep;
 	unsigned int	must_eat;
-	pthread_mutex_t	*fork;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	*print;
 	// pthread_mutex_t	*death_mutex; why?
 	int				dead;
@@ -58,6 +59,7 @@ int					simple_atoi(const char *str);
 size_t				ft_strlen(const char *s);
 int					contains_only_digits(char *str);
 int					msg(const char *msg);
+int					clean_memory(t_data *data);
 
 #endif
 
