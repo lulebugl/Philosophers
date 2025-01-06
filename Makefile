@@ -17,7 +17,7 @@ CC		= cc
 CFLAGS	= -pthread
 MODE = none
 ifeq ($(MODE), debug)
-	CFLAGS	+= -D DEBUG_FORMATTING=1 -fsanitize=thread -g
+	CFLAGS	+= -fsanitize=thread -g
 endif
 
 # SRC_PATH = srcs/
@@ -25,7 +25,9 @@ OBJ_PATH = objs/
 
 SRCS		=	main.c \
 				utils.c \
-				clean.c 
+				clean.c \
+				routine.c \
+				parsing.c \
 				
 # SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRCS:.c=.o)

@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+time_t elapsed_time(time_t start)
+{
+	return (get_time() - start);
+}
+
+time_t get_time(void)
+{
+    struct timeval tv;
+    
+    gettimeofday(&tv, NULL);
+    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
 int	msg(const char *msg)
 {
 	printf(msg, MAX_PHILOS);

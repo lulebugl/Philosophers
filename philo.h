@@ -19,10 +19,14 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/time.h>
 # include <unistd.h>
-# include <time.h>
 
 /** Macros **/
+# define PURPLE	"\033[0;35m"
+# define CYAN	"\033[0;36m"
+# define RESET	"\033[0m"
+
 # define MAX_PHILOS 250
 # define INVALID_PHILO_INPUT \
 	"usage : There must be between 1 and \
@@ -31,35 +35,44 @@
 	"<number of times each philosopher must eat> must be a positive integer \
 between 1 and 2147483647.\n"
 
+typedef struct s_data	t_data;
+
 typedef struct s_philo
 {
-	pthread_t		th;
-	unsigned int	id;
-	unsigned int	times_eaten;
-	uint64_t		last_meal;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-}					t_philo;
+	pthread_t			th;
+	int					id;
+	unsigned int		times_eaten;
+	time_t				last_meal;
+	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		*right_fork;
+	t_data				*data;
+}						t_philo;
 
 typedef struct s_data
 {
-	unsigned int	nb_philo;
-	unsigned int	time_to_die;
-	unsigned int	time_to_eat;
-	unsigned int	time_to_sleep;
-	unsigned int	must_eat;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	*print;
+	time_t				start;
+	unsigned int		nb_philo;
+	unsigned int		time_to_die;
+	unsigned int		time_to_eat;
+	unsigned int		time_to_sleep;
+	unsigned int		must_eat;
+	pthread_mutex_t		*forks;
+	pthread_mutex_t		print;
 	// pthread_mutex_t	*death_mutex; why?
-	int				dead;
-	t_philo			*philo;
-}					t_data;
+	int					dead;
+	t_philo				*philo;
+}						t_data;
 
-int					simple_atoi(const char *str);
-size_t				ft_strlen(const char *s);
-int					contains_only_digits(char *str);
-int					msg(const char *msg);
-int					clean_memory(t_data *data);
+int		parse_params(t_data *data, int argc, char **argv);
 
+time_t					get_time(void);
+int						simple_atoi(const char *str);
+size_t					ft_strlen(const char *s);
+int						contains_only_digits(char *str);
+int						msg(const char *msg);
+int						clean_memory(t_data *data);
+
+int						launch_routines(t_data *data);
+time_t elapsed_time(time_t start);
 #endif
 
