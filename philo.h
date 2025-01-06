@@ -28,9 +28,6 @@
 # define RESET	"\033[0m"
 
 # define MAX_PHILOS 250
-# define INVALID_PHILO_INPUT \
-	"usage : There must be between 1 and \
-%d philosophers.\n"
 # define INV_MUST_EAT \
 	"<number of times each philosopher must eat> must be a positive integer \
 between 1 and 2147483647.\n"
@@ -63,7 +60,7 @@ typedef struct s_data
 	t_philo				*philo;
 }						t_data;
 
-int		parse_params(t_data *data, int argc, char **argv);
+int		init_data(t_data *data, int argc, char **argv);
 
 time_t					get_time(void);
 int						simple_atoi(const char *str);

@@ -24,9 +24,10 @@ int	main(int argc, char **argv)
 
 	if (argc > 4)
 	{
-		parse_params(&data, argc, argv);
+		if (init_data(&data, argc, argv) != 0)
+			return (1);
 		if (launch_routines(&data) != 0)
-			return (clean_memory(&data), 1);
+			return (1);
 		return (0);
 	}
 	usage();

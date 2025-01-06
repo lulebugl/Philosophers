@@ -27,6 +27,7 @@ SRCS		=	main.c \
 				utils.c \
 				clean.c \
 				routine.c \
+				init.c \
 				parsing.c \
 				
 # SRCS	= $(addprefix $(SRC_PATH), $(SRC))

@@ -25,25 +25,25 @@ time_t get_time(void)
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	msg(const char *msg)
-{
-	printf(msg, MAX_PHILOS);
-	return (-1);
-}
+// int	msg(const char *msg)
+// {
+// 	printf(msg, MAX_PHILOS);
+// 	return (-1);
+// }
 
-int	contains_only_digits(char *str)
-{
-	int	i;
+// int	contains_only_digits(char *str)
+// {
+// 	int	i;
 
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] < '0' || str[i] > '9')
-			return (0);
-		i++;
-	}
-	return (1);
-}
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] < '0' || str[i] > '9')
+// 			return (0);
+// 		i++;
+// 	}
+// 	return (1);
+// }
 
 size_t	ft_strlen(const char *s)
 {
@@ -55,29 +55,29 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-int	simple_atoi(const char *str)
-{
-	unsigned long long	res;
-	int					i;
+// int	simple_atoi(const char *str)
+// {
+// 	unsigned long long	res;
+// 	int					i;
 
-	i = 0;
-	res = 0;
-	while (((str[i] >= 9 && str[i] <= 13) || str[i] == ' ') && str[i])
-		i++;
-	if (str[i] == '+')
-		i++;
-	while (str[i])
-	{
-		if (str[i] >= '0' && str[i] <= '9')
-		{
-			res = res * 10 + str[i] - 48;
-			i++;
-		}
-		else
-			return (-1);
-	}
-	if (res > INT_MAX)
-		return (-1);
-	return ((int)res);
-}
+// 	i = 0;
+// 	res = 0;
+// 	while (((str[i] >= 9 && str[i] <= 13) || str[i] == ' ') && str[i])
+// 		i++;
+// 	if (str[i] == '+')
+// 		i++;
+// 	while (str[i])
+// 	{
+// 		if (str[i] >= '0' && str[i] <= '9')
+// 		{
+// 			res = res * 10 + str[i] - 48;
+// 			i++;
+// 		}
+// 		else
+// 			return (-1);
+// 	}
+// 	if (res > INT_MAX)
+// 		return (-1);
+// 	return ((int)res);
+// }
 
