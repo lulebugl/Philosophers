@@ -57,7 +57,7 @@ static int validate_params(t_data *data , int argc, char **argv)
 	data->nb_philo = parse_param(argv[1]);
 	if (data->nb_philo < 1 || data->nb_philo > MAX_PHILOS)
 	{
-		printf("There must be between 1 and %d philosophers.\n", MAX_PHILO);
+		printf("There must be between 1 and %d philosophers.\n", MAX_PHILOS);
 		return (1);
 	}
 	if (!validate_param(&data->time_to_die, argv[2], "<time to die>"))
@@ -75,14 +75,62 @@ static int validate_params(t_data *data , int argc, char **argv)
 			return (1);
 		}
 	}
+	return (0);
 }
+
+// int	launch_routines(t_data *data)
+// {
+// 	pthread_mutex_init(&data->print, NULL);
+// 	// pthread_mutex_init(data->death_mutex, NULL);
+// 	data->start = get_time();
+// 	init_philo(data);
+// 	i = -1;
+// 	while (++i < data->nb_philo)
+// 		pthread_join(data->philo[i].th, NULL);
+// 	// destroy_all(data);
+// 	return (0);
+// }
+
+// int	init_philo(t_data *data)
+// {
+// 	int	i;
+
+// 	i = -1;
+// 	while (++i < data->nb_philo)
+// 	{
+// 		memset(&data->philo[i], 0, sizeof(t_philo));
+// 		data->philo[i].id = i + 1;
+// 		data->philo[i].data = data;
+// 		data->philo[i].left_fork = &data->forks[i];
+// 		data->philo[i].right_fork = &data->forks[(i + 1) % data->nb_philo];
+// 		if (i % 2)
+// 			usleep(data->time_to_eat / 2);
+// 		data->philo[i].last_meal = get_time();
+// 		pthread_create(&data->philo[i].th, NULL, &routine,
+// 			(void *)&data->philo[i]);
+// 	}
+// 	return (0);
+// }
 
 int	init_data(t_data *data, int argc, char **argv)
 {
+	int i;
+	
+	i = -1;
 	memset(data, 0, sizeof(t_data));
 	data->must_eat = -1;
 	if (validate_params(data, argc, argv) != 0)
 		return (1);
-	
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
+	if (!data->forks)
+		return (1);
+	data->philo = malloc(sizeof(t_philo) * data->nb_philo);
+	if (!data->philo)
+		return (free(data->forks), 1);
+	while (++i < data->nb_philo)
+		pthread_mutex_init(&data->forks[i], NULL);
+	pthread_mutex_init(&data->print, NULL);
+	// pthread_mutex_init(data->death_mutex, NULL);
+	data->start = get_time();
 	return (0);
 }

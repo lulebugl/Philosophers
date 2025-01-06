@@ -121,20 +121,20 @@ int	launch_routines(t_data *data)
 	int	i;
 
 	i = -1;
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
-	if (!data->forks)
-		return (1);
-	data->philo = malloc(sizeof(t_philo) * data->nb_philo);
-	if (!data->philo)
-	{
-		free(data->forks);
-		return (1);
-	}
-	while (++i < data->nb_philo)
-		pthread_mutex_init(&data->forks[i], NULL);
-	pthread_mutex_init(&data->print, NULL);
-	// pthread_mutex_init(data->death_mutex, NULL);
-	data->start = get_time();
+	// data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
+	// if (!data->forks)
+	// 	return (1);
+	// data->philo = malloc(sizeof(t_philo) * data->nb_philo);
+	// if (!data->philo)
+	// {
+	// 	free(data->forks);
+	// 	return (1);
+	// }
+	// while (++i < data->nb_philo)
+	// 	pthread_mutex_init(&data->forks[i], NULL);
+	// pthread_mutex_init(&data->print, NULL);
+	// // pthread_mutex_init(data->death_mutex, NULL);
+	// data->start = get_time();
 	init_philo(data);
 	i = -1;
 	while (++i < data->nb_philo)
