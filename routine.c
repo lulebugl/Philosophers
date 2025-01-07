@@ -60,6 +60,15 @@ void	eating(t_philo *ph)
 // 	}
 // }
 
+int	should_routine_continue(t_philo *ph)
+{
+	if (ph->data->dead == 1)
+		return (0);
+	if (ph->data->must_eat != -1 && ph->data->must_eat == ph->times_eaten)
+		return (0);
+	return (1);
+}
+
 void	*routine(void *philo)
 {
 	t_philo	*ph;
@@ -68,8 +77,6 @@ void	*routine(void *philo)
 	while (ph->data->dead == 0)
 	{
 		// should it complete the routine before returning ?
-		if (ph->data->must_eat == ph->times_eaten)
-			return (NULL);
 		// should it be the last message seen?
 		if (get_time() - ph->last_meal > ph->data->time_to_die)
 		{
@@ -83,11 +90,19 @@ void	*routine(void *philo)
 		routine_msg("has taken a fork\n", ph);
 		routine_msg("is eating\n", ph);
 		usleep(ph->data->time_to_eat * 1000);
-		ph->times_eaten++;
-		ph->last_meal = get_time();
+		if (should_routine_continue(ph))
+		{
+			ph->times_eaten++;
+			ph->last_meal = get_time();
+		}
+		else
+		{
+			printf("%d end\n", ph->id);
+			return (NULL);
+		}
+		routine_msg("is sleeping\n", ph);
 		pthread_mutex_unlock(ph->left_fork);
 		pthread_mutex_unlock(ph->right_fork);
-		routine_msg("is sleeping\n", ph);
 		usleep(ph->data->time_to_sleep * 1000);
 		routine_msg("is thinking\n", ph);
 		usleep(ph->data->time_to_sleep * 1000);
@@ -95,7 +110,7 @@ void	*routine(void *philo)
 	return (NULL);
 }
 
-int	init_philo(t_data *data)
+int	create_philos(t_data *data)
 {
 	int	i;
 
@@ -110,8 +125,9 @@ int	init_philo(t_data *data)
 		if (i % 2)
 			usleep(data->time_to_eat / 2);
 		data->philo[i].last_meal = get_time();
-		pthread_create(&data->philo[i].th, NULL, &routine,
-			(void *)&data->philo[i]);
+		if (pthread_create(&data->philo[i].th, NULL, &routine,
+			(void *)&data->philo[i]))
+			return (1);
 	}
 	return (0);
 }
@@ -121,21 +137,8 @@ int	launch_routines(t_data *data)
 	int	i;
 
 	i = -1;
-	// data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
-	// if (!data->forks)
-	// 	return (1);
-	// data->philo = malloc(sizeof(t_philo) * data->nb_philo);
-	// if (!data->philo)
-	// {
-	// 	free(data->forks);
-	// 	return (1);
-	// }
-	// while (++i < data->nb_philo)
-	// 	pthread_mutex_init(&data->forks[i], NULL);
-	// pthread_mutex_init(&data->print, NULL);
-	// // pthread_mutex_init(data->death_mutex, NULL);
-	// data->start = get_time();
-	init_philo(data);
+	if (create_philos(data))
+		return (1);
 	i = -1;
 	while (++i < data->nb_philo)
 		pthread_join(data->philo[i].th, NULL);

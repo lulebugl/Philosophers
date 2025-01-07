@@ -80,8 +80,6 @@ static int validate_params(t_data *data , int argc, char **argv)
 
 // int	launch_routines(t_data *data)
 // {
-// 	pthread_mutex_init(&data->print, NULL);
-// 	// pthread_mutex_init(data->death_mutex, NULL);
 // 	data->start = get_time();
 // 	init_philo(data);
 // 	i = -1;
