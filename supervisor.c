@@ -16,12 +16,10 @@ static bool	someone_died(t_philo *ph)
 {
 	if (get_time() - ph->last_meal >= ph->dinner->time_to_die)
 	{
-		pthread_mutex_lock(&ph->dinner->death_mutex);
+		pthread_mutex_lock(&ph->dinner->stop_lock);
 		ph->dinner->stop = 1;
-		pthread_mutex_unlock(&ph->dinner->death_mutex);
-		// routine_msg(DIED, ph);
-		printf("%s%ld%s %d %s", RED, get_time() - ph->dinner->start, RESET,
-			ph->id, DIED);
+		pthread_mutex_unlock(&ph->dinner->stop_lock);
+		routine_msg(DIED, ph);
 		pthread_mutex_unlock(&ph->meal_lock);
 		return (true);
 	}

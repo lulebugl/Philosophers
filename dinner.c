@@ -29,10 +29,10 @@ bool	stop_dinner(t_dinner *dinner)
 	bool	res;
 
 	res = false;
-	pthread_mutex_lock(&dinner->death_mutex);
+	pthread_mutex_lock(&dinner->stop_lock);
 	if (dinner->stop == 1)
 		res = true;
-	pthread_mutex_unlock(&dinner->death_mutex);
+	pthread_mutex_unlock(&dinner->stop_lock);
 	return (res);
 }
 

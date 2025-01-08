@@ -25,7 +25,7 @@ void	free_dinner(t_dinner *dinner)
 	free(dinner->forks);
 	free(dinner->philo);
 	pthread_mutex_destroy(&dinner->print);
-	pthread_mutex_destroy(&dinner->death_mutex);
+	pthread_mutex_destroy(&dinner->stop_lock);
 	memset(dinner, 0, sizeof(t_dinner));
 }
 

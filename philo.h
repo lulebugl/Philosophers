@@ -68,8 +68,8 @@ typedef struct s_dinner
 	unsigned int		must_eat;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		print;
-	pthread_mutex_t		death_mutex;
-	int					stop;
+	pthread_mutex_t		stop_lock;
+	bool				stop;
 	t_philo				*philo;
 }						t_dinner;
 

@@ -96,7 +96,7 @@ int	init_dinner(t_dinner *dinner, int argc, char **argv)
 	while (++i < dinner->nb_philo)
 		pthread_mutex_init(&dinner->forks[i], NULL);
 	pthread_mutex_init(&dinner->print, NULL);
-	pthread_mutex_init(&dinner->death_mutex, NULL);
+	pthread_mutex_init(&dinner->stop_lock, NULL);
 	dinner->start = get_time();
 	return (0);
 }
