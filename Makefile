@@ -26,9 +26,8 @@ OBJ_PATH = objs/
 SRCS		=	main.c \
 				utils.c \
 				clean.c \
-				routine.c \
+				dinner.c \
 				init.c \
-				parsing.c \
 				supervisor.c \
 				
 # SRCS	= $(addprefix $(SRC_PATH), $(SRC))

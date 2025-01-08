@@ -19,47 +19,48 @@ static void	usage(void)
 optional:<number_of_times_each_philosopher_must_eat>\n");
 }
 
-int	start_dinner(t_data *data)
+int	start_dinner(t_dinner *dinner)
 {
 	int	i;
 
 	i = -1;
-	while (++i < data->nb_philo)
+	while (++i < dinner->nb_philo)
 	{
-		memset(&data->philo[i], 0, sizeof(t_philo));
-		data->philo[i].id = i + 1;
-		data->philo[i].data = data;
-		data->philo[i].left_fork = &data->forks[i];
-		data->philo[i].right_fork = &data->forks[(i + 1) % data->nb_philo];
+		memset(&dinner->philo[i], 0, sizeof(t_philo));
+		dinner->philo[i].id = i + 1;
+		dinner->philo[i].dinner = dinner;
+		pthread_mutex_init(&dinner->philo[i].meal_lock, NULL);
+		dinner->philo[i].left_fork = &dinner->forks[i];
+		dinner->philo[i].right_fork = &dinner->forks[(i + 1) % dinner->nb_philo];
 		if (i % 2)
-			usleep(data->time_to_eat / 2);
-		data->philo[i].last_meal = get_time();
-		if (pthread_create(&data->philo[i].th, NULL, &routine,
-				(void *)&data->philo[i]) != 0)
-			return (free_data(data), 1);
+			usleep(dinner->time_to_eat / 2);
+		dinner->philo[i].last_meal = get_time();
+		if (pthread_create(&dinner->philo[i].th, NULL, &routine,
+				(void *)&dinner->philo[i]) != 0)
+			return (free_dinner(dinner), 1);
 	}
-	if (data->nb_philo > 1)
-		if (create_supervisor(data) != 0)
-			return (free_data(data), 1);
+	if (dinner->nb_philo > 1)
+		if (create_supervisor(dinner) != 0)
+			return (free_dinner(dinner), 1);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	t_data	data;
+	t_dinner	dinner;
 	int		i;
 
 	if (argc < 5 || argc > 6)
 		return (usage(), 0);
-	if (init_data(&data, argc, argv) != 0)
+	if (init_dinner(&dinner, argc, argv) != 0)
 		return (1);
-	if (start_dinner(&data))
+	if (start_dinner(&dinner))
 		return (1);
 	i = -1;
-	while (++i < data.nb_philo)
-		pthread_join(data.philo[i].th, NULL);
-	free_data(&data);
-	// if (launch_routines(&data) != 0)
+	while (++i < dinner.nb_philo)
+		pthread_join(dinner.philo[i].th, NULL);
+	free_dinner(&dinner);
+	// if (launch_routines(&dinner) != 0)
 	// 	return (1);
 	return (0);
 }

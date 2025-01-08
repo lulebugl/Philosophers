@@ -25,6 +25,16 @@ time_t get_time(void)
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
 // int	msg(const char *msg)
 // {
 // 	printf(msg, MAX_PHILOS);
@@ -44,16 +54,6 @@ time_t get_time(void)
 // 	}
 // 	return (1);
 // }
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
 
 // int	simple_atoi(const char *str)
 // {

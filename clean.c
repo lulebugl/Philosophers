@@ -12,31 +12,36 @@
 
 #include "philo.h"
 
-void	free_data(t_data *data)
+void	free_dinner(t_dinner *dinner)
 {
 	int	i;
 
 	i = -1;
-	while (++i < data->nb_philo)
-		pthread_mutex_destroy(&data->forks[i]);
-	free(data->forks);
-	free(data->philo);
-	memset(data, 0, sizeof(t_data));
+	while (++i < dinner->nb_philo)
+	{
+		pthread_mutex_destroy(&dinner->forks[i]);
+		pthread_mutex_destroy(&dinner->philo[i].meal_lock);
+	}
+	free(dinner->forks);
+	free(dinner->philo);
+	pthread_mutex_destroy(&dinner->print);
+	pthread_mutex_destroy(&dinner->death_mutex);
+	memset(dinner, 0, sizeof(t_dinner));
 }
 
-int	clean_memory(t_data *data)
+int	clean_memory(t_dinner *dinner)
 {
 	int i;
 
 	i = 0;
-	while (i < data->nb_philo)
+	while (i < dinner->nb_philo)
 	{
-		if (data->philo)
+		if (dinner->philo)
 		{
-			free(data->philo);
+			free(dinner->philo);
 		}
 		i--;
 	}
-	memset(data, 0, sizeof(t_data));
+	memset(dinner, 0, sizeof(t_dinner));
 	return (0);
 }

@@ -40,10 +40,10 @@ static int	parse_param(const char *str)
 	return ((int)res);
 }
 
-static int	validate_param(unsigned int *data, char *param, char *param_name)
+static int	validate_param(unsigned int *dinner, char *param, char *param_name)
 {
-	*data = parse_param(param);
-	if (data <= 0)
+	*dinner = parse_param(param);
+	if (dinner <= 0)
 	{
 		printf("%s must be a positive integer between 1 and 2147483647.\n",
 			param);
@@ -52,25 +52,25 @@ static int	validate_param(unsigned int *data, char *param, char *param_name)
 	return (1);
 }
 
-static int validate_params(t_data *data , int argc, char **argv)
+static int validate_params(t_dinner *dinner , int argc, char **argv)
 {
-	data->must_eat = -1;
-	data->nb_philo = parse_param(argv[1]);
-	if (data->nb_philo < 1 || data->nb_philo > MAX_PHILOS)
+	dinner->must_eat = -1;
+	dinner->nb_philo = parse_param(argv[1]);
+	if (dinner->nb_philo < 1 || dinner->nb_philo > MAX_PHILOS)
 	{
 		printf("There must be between 1 and %d philosophers.\n", MAX_PHILOS);
 		return (1);
 	}
-	if (!validate_param(&data->time_to_die, argv[2], "<time to die>"))
+	if (!validate_param(&dinner->time_to_die, argv[2], "<time to die>"))
 		return (1);
-	if (!validate_param(&data->time_to_eat, argv[3], "<time to eat>"))
+	if (!validate_param(&dinner->time_to_eat, argv[3], "<time to eat>"))
 		return (1);
-	if (!validate_param(&data->time_to_sleep, argv[4], "<time to sleep>"))
+	if (!validate_param(&dinner->time_to_sleep, argv[4], "<time to sleep>"))
 		return (1);
 	if (argc == 6)
 	{
-		data->must_eat = parse_param(argv[5]);
-		if (data->must_eat < 0)
+		dinner->must_eat = parse_param(argv[5]);
+		if (dinner->must_eat < 0)
 		{
 			printf(INV_MUST_EAT);
 			return (1);
@@ -79,24 +79,24 @@ static int validate_params(t_data *data , int argc, char **argv)
 	return (0);
 }
 
-int	init_data(t_data *data, int argc, char **argv)
+int	init_dinner(t_dinner *dinner, int argc, char **argv)
 {
 	int i;
-	
+
 	i = -1;
-	memset(data, 0, sizeof(t_data));
-	if (validate_params(data, argc, argv) != 0)
+	memset(dinner, 0, sizeof(t_dinner));
+	if (validate_params(dinner, argc, argv) != 0)
 		return (1);
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
-	if (!data->forks)
+	dinner->forks = malloc(sizeof(pthread_mutex_t) * dinner->nb_philo);
+	if (!dinner->forks)
 		return (1);
-	data->philo = malloc(sizeof(t_philo) * data->nb_philo);
-	if (!data->philo)
-		return (free(data->forks), 1);
-	while (++i < data->nb_philo)
-		pthread_mutex_init(&data->forks[i], NULL);
-	pthread_mutex_init(&data->print, NULL);
-	// pthread_mutex_init(data->death_mutex, NULL);
-	data->start = get_time();
+	dinner->philo = malloc(sizeof(t_philo) * dinner->nb_philo);
+	if (!dinner->philo)
+		return (free(dinner->forks), 1);
+	while (++i < dinner->nb_philo)
+		pthread_mutex_init(&dinner->forks[i], NULL);
+	pthread_mutex_init(&dinner->print, NULL);
+	pthread_mutex_init(&dinner->death_mutex, NULL);
+	dinner->start = get_time();
 	return (0);
 }
