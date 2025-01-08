@@ -38,27 +38,39 @@ static void	routine_msg(char *msg, t_philo *ph)
 void	eating(t_philo *ph)
 {
 	pthread_mutex_lock(ph->left_fork);
-	routine_msg("has taken a fork\n", ph);
+	routine_msg(FORK, ph);
 	pthread_mutex_lock(ph->right_fork);
-	routine_msg("has taken a fork\n", ph);
-	routine_msg("is eating\n", ph);
+	routine_msg(FORK, ph);
+	routine_msg(EATING, ph);
 	pthread_mutex_unlock(ph->left_fork);
 	pthread_mutex_unlock(ph->right_fork);
 	ph->times_eaten++;
 }
 
-// void	philo_sleep(t_table *table, time_t sleep_time)
+// bool	has_simulation_stopped(t_table *table)
 // {
-// 	time_t	wake_up;
+// 	bool	r;
 
-// 	wake_up = get_time() + sleep_time;
-// 	while (get_time() < wake_up)
-// 	{
-// 		if (has_simulation_stopped(table))
-// 			break ;
-// 		usleep(100);
-// 	}
+// 	r = false;
+// 	pthread_mutex_lock(&table->sim_stop_lock);
+// 	if (table->sim_stop == true)
+// 		r = true;
+// 	pthread_mutex_unlock(&table->sim_stop_lock);
+// 	return (r);
 // }
+
+void	incremental_sleep(t_data *data, time_t sleep_time)
+{
+	time_t	wake_up;
+
+	wake_up = get_time() + sleep_time;
+	while (get_time() < wake_up)
+	{
+		if (data->dead == 1)
+			break ;
+		usleep(100);
+	}
+}
 
 int	should_routine_continue(t_philo *ph)
 {
@@ -69,7 +81,50 @@ int	should_routine_continue(t_philo *ph)
 	return (1);
 }
 
-void	*routine(void *philo)
+static void *poor_philo(t_data *data)
+{
+	routine_msg(FORK, data->philo);
+	usleep(data->time_to_die * 1000);
+	routine_msg(DIED, data->philo);
+	return (NULL);
+}
+
+static void start_routine(t_philo *ph)
+{
+	t_data *data;
+	
+	data = ph->data;
+	pthread_mutex_lock(ph->left_fork);
+	routine_msg(FORK, ph);
+	pthread_mutex_lock(ph->right_fork);
+	routine_msg(FORK, ph);
+	routine_msg(EATING, ph);
+	ph->last_meal = get_time();
+	incremental_sleep(data, data->time_to_eat);
+	ph->times_eaten++;
+	routine_msg(SLEEPING, ph);
+	pthread_mutex_unlock(ph->left_fork);
+	pthread_mutex_unlock(ph->right_fork);
+	incremental_sleep(data, data->time_to_sleep);
+}
+
+void	*routine(void *arg)
+{
+	t_philo	*ph;
+	t_data	*data;
+
+	ph = (t_philo *)arg;
+	data = ph->data;
+	if (data->nb_philo == 1)
+		return (poor_philo(data));
+	while (data->dead != 1)
+	{
+		start_routine(ph);
+	}
+	return (NULL);
+}
+
+void	*routine2(void *philo)
 {
 	t_philo	*ph;
 
@@ -81,15 +136,16 @@ void	*routine(void *philo)
 		if (get_time() - ph->last_meal > ph->data->time_to_die)
 		{
 			ph->data->dead = 1;
-			routine_msg("died\n", ph);
+			routine_msg(DIED, ph);
 			return (NULL);
 		}
 		pthread_mutex_lock(ph->left_fork);
-		routine_msg("has taken a fork\n", ph);
+		routine_msg(FORK, ph);
 		pthread_mutex_lock(ph->right_fork);
-		routine_msg("has taken a fork\n", ph);
-		routine_msg("is eating\n", ph);
-		usleep(ph->data->time_to_eat * 1000);
+		routine_msg(FORK, ph);
+		routine_msg(EATING, ph);
+		// usleep(ph->data->time_to_eat * 1000);
+		incremental_sleep(ph->data, ph->data->time_to_eat * 1000);
 		if (should_routine_continue(ph))
 		{
 			ph->times_eaten++;
@@ -97,52 +153,17 @@ void	*routine(void *philo)
 		}
 		else
 		{
-			printf("%d end\n", ph->id);
 			return (NULL);
 		}
 		routine_msg("is sleeping\n", ph);
 		pthread_mutex_unlock(ph->left_fork);
 		pthread_mutex_unlock(ph->right_fork);
 		usleep(ph->data->time_to_sleep * 1000);
-		routine_msg("is thinking\n", ph);
-		usleep(ph->data->time_to_sleep * 1000);
+		incremental_sleep(ph->data, ph->data->time_to_sleep * 1000);
+		routine_msg(THINKING, ph);
+		// usleep(ph->data->time_to_sleep * 1000);
+		// incremental_sleep(ph->data, ph->data->time_to_sleep * 1000);
 	}
 	return (NULL);
 }
-
-// int	create_philos(t_data *data)
-// {
-// 	int	i;
-
-// 	i = -1;
-// 	while (++i < data->nb_philo)
-// 	{
-// 		memset(&data->philo[i], 0, sizeof(t_philo));
-// 		data->philo[i].id = i + 1;
-// 		data->philo[i].data = data;
-// 		data->philo[i].left_fork = &data->forks[i];
-// 		data->philo[i].right_fork = &data->forks[(i + 1) % data->nb_philo];
-// 		if (i % 2)
-// 			usleep(data->time_to_eat / 2);
-// 		data->philo[i].last_meal = get_time();
-// 		if (pthread_create(&data->philo[i].th, NULL, &routine,
-// 			(void *)&data->philo[i]))
-// 			return (1);
-// 	}
-// 	return (0);
-// }
-
-// int	launch_routines(t_data *data)
-// {
-// 	int	i;
-
-// 	i = -1;
-// 	if (create_philos(data))
-// 		return (1);
-// 	i = -1;
-// 	while (++i < data->nb_philo)
-// 		pthread_join(data->philo[i].th, NULL);
-// 	// destroy_all(data);
-// 	return (0);
-// }
 

@@ -12,6 +12,18 @@
 
 #include "philo.h"
 
+void	free_data(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->nb_philo)
+		pthread_mutex_destroy(&data->forks[i]);
+	free(data->forks);
+	free(data->philo);
+	memset(data, 0, sizeof(t_data));
+}
+
 int	clean_memory(t_data *data)
 {
 	int i;

@@ -15,6 +15,7 @@
 
 # include <limits.h>
 # include <pthread.h>
+# include <stdbool.h>
 # include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -23,14 +24,20 @@
 # include <unistd.h>
 
 /** Macros **/
-# define PURPLE	"\033[0;35m"
-# define CYAN	"\033[0;36m"
-# define RESET	"\033[0m"
+# define PURPLE "\033[0;35m"
+# define CYAN "\033[0;36m"
+# define RESET "\033[0m"
 
 # define MAX_PHILOS 250
 # define INV_MUST_EAT \
 	"<number of times each philosopher must eat> must be a positive integer \
 between 1 and 2147483647.\n"
+
+# define DIED "died\n"
+# define FORK "has taken a fork\n"
+# define EATING "is eating\n"
+# define THINKING "is thinking\n"
+# define SLEEPING "is sleeping\n"
 
 typedef struct s_data	t_data;
 
@@ -60,17 +67,18 @@ typedef struct s_data
 	t_philo				*philo;
 }						t_data;
 
-int		init_data(t_data *data, int argc, char **argv);
+int						init_data(t_data *data, int argc, char **argv);
 
 time_t					get_time(void);
+void					free_data(t_data *data);
 int						simple_atoi(const char *str);
 size_t					ft_strlen(const char *s);
 int						contains_only_digits(char *str);
 int						msg(const char *msg);
 int						clean_memory(t_data *data);
 
-void	*routine(void *philo);
+void					*routine(void *philo);
 int						launch_routines(t_data *data);
-time_t elapsed_time(time_t start);
+time_t					elapsed_time(time_t start);
 #endif
 

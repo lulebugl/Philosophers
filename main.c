@@ -19,19 +19,39 @@ static void	usage(void)
 optional:<number_of_times_each_philosopher_must_eat>\n");
 }
 
-void free_data(t_data *data)
+bool	should_stop_dinner(t_data *data)
 {
-	int i;
+	// if (data->dead == 1)
+	// {
+	// 	printf("someone died\n");
+	// 	return (true);
+	// }
 	
-	i = -1;
-	while (++i < data->nb_philo)
-		pthread_mutex_destroy(&data->forks[i]);
-	free(data->forks);
-	free(data->philo);
-	memset(data, 0, sizeof(t_data));
+	return (false);
 }
 
-int	create_philos(t_data *data)
+void	*supervise(void *arg)
+{
+	while (1)
+	{
+		//printf("supervising\n");
+		if (should_stop_dinner((t_data *)arg) == true)
+			return (NULL);
+		usleep(10000);
+	}
+	return (NULL);
+}
+
+int	create_supervisor(t_data *data)
+{
+	pthread_t	sp;
+
+	if (pthread_create(&sp, NULL, &supervise, (void *)data) != 0)
+		return (1);
+	return (0);
+}
+
+int	start_dinner(t_data *data)
 {
 	int	i;
 
@@ -47,24 +67,27 @@ int	create_philos(t_data *data)
 			usleep(data->time_to_eat / 2);
 		data->philo[i].last_meal = get_time();
 		if (pthread_create(&data->philo[i].th, NULL, &routine,
-			(void *)&data->philo[i]))
+				(void *)&data->philo[i]) != 0)
 			return (free_data(data), 1);
 	}
+	if (data->nb_philo > 1)
+		if (create_supervisor(data) != 0)
+			return (free_data(data), 1);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
+	int		i;
 
-	if (argc < 5 || argc > 7)
+	if (argc < 5 || argc > 6)
 		return (usage(), 0);
 	if (init_data(&data, argc, argv) != 0)
 		return (1);
-	if (create_philos(&data))
+	if (start_dinner(&data))
 		return (1);
-
-	int i = -1;
+	i = -1;
 	while (++i < data.nb_philo)
 		pthread_join(data.philo[i].th, NULL);
 	free_data(&data);
@@ -72,3 +95,4 @@ int	main(int argc, char **argv)
 	// 	return (1);
 	return (0);
 }
+
