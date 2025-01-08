@@ -69,6 +69,7 @@ int						contains_only_digits(char *str);
 int						msg(const char *msg);
 int						clean_memory(t_data *data);
 
+void	*routine(void *philo);
 int						launch_routines(t_data *data);
 time_t elapsed_time(time_t start);
 #endif

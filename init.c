@@ -54,6 +54,7 @@ static int	validate_param(unsigned int *data, char *param, char *param_name)
 
 static int validate_params(t_data *data , int argc, char **argv)
 {
+	data->must_eat = -1;
 	data->nb_philo = parse_param(argv[1]);
 	if (data->nb_philo < 1 || data->nb_philo > MAX_PHILOS)
 	{
@@ -66,7 +67,7 @@ static int validate_params(t_data *data , int argc, char **argv)
 		return (1);
 	if (!validate_param(&data->time_to_sleep, argv[4], "<time to sleep>"))
 		return (1);
-	if (argc >= 6)
+	if (argc == 6)
 	{
 		data->must_eat = parse_param(argv[5]);
 		if (data->must_eat < 0)
@@ -78,45 +79,12 @@ static int validate_params(t_data *data , int argc, char **argv)
 	return (0);
 }
 
-// int	launch_routines(t_data *data)
-// {
-// 	data->start = get_time();
-// 	init_philo(data);
-// 	i = -1;
-// 	while (++i < data->nb_philo)
-// 		pthread_join(data->philo[i].th, NULL);
-// 	// destroy_all(data);
-// 	return (0);
-// }
-
-// int	init_philo(t_data *data)
-// {
-// 	int	i;
-
-// 	i = -1;
-// 	while (++i < data->nb_philo)
-// 	{
-// 		memset(&data->philo[i], 0, sizeof(t_philo));
-// 		data->philo[i].id = i + 1;
-// 		data->philo[i].data = data;
-// 		data->philo[i].left_fork = &data->forks[i];
-// 		data->philo[i].right_fork = &data->forks[(i + 1) % data->nb_philo];
-// 		if (i % 2)
-// 			usleep(data->time_to_eat / 2);
-// 		data->philo[i].last_meal = get_time();
-// 		pthread_create(&data->philo[i].th, NULL, &routine,
-// 			(void *)&data->philo[i]);
-// 	}
-// 	return (0);
-// }
-
 int	init_data(t_data *data, int argc, char **argv)
 {
 	int i;
 	
 	i = -1;
 	memset(data, 0, sizeof(t_data));
-	data->must_eat = -1;
 	if (validate_params(data, argc, argv) != 0)
 		return (1);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->nb_philo);
