@@ -12,52 +12,16 @@
 
 #include "philo.h"
 
-void	destroy_all(t_data *data)
+void	routine_msg(char *msg, t_philo *ph)
 {
-	int	i;
-
-	i = -1;
-	pthread_mutex_destroy(&data->print);
-	while (++i < data->nb_philo)
-		pthread_mutex_destroy(&data->forks[i]);
-	i = -1;
-	while (++i < data->nb_philo)
-		memset(&data->philo[i], 0, sizeof(t_philo));
-	free(data);
-}
-
-static void	routine_msg(char *msg, t_philo *ph)
-{
+	if (DEBUG == true)
+		return ;
 	pthread_mutex_lock(&ph->data->print);
 	if (msg)
 		printf("%s%ld%s %d %s", CYAN, get_time() - ph->data->start, RESET,
 			ph->id, msg);
 	pthread_mutex_unlock(&ph->data->print);
 }
-
-void	eating(t_philo *ph)
-{
-	pthread_mutex_lock(ph->left_fork);
-	routine_msg(FORK, ph);
-	pthread_mutex_lock(ph->right_fork);
-	routine_msg(FORK, ph);
-	routine_msg(EATING, ph);
-	pthread_mutex_unlock(ph->left_fork);
-	pthread_mutex_unlock(ph->right_fork);
-	ph->times_eaten++;
-}
-
-// bool	has_simulation_stopped(t_table *table)
-// {
-// 	bool	r;
-
-// 	r = false;
-// 	pthread_mutex_lock(&table->sim_stop_lock);
-// 	if (table->sim_stop == true)
-// 		r = true;
-// 	pthread_mutex_unlock(&table->sim_stop_lock);
-// 	return (r);
-// }
 
 void	incremental_sleep(t_data *data, time_t sleep_time)
 {
@@ -70,15 +34,6 @@ void	incremental_sleep(t_data *data, time_t sleep_time)
 			break ;
 		usleep(100);
 	}
-}
-
-int	should_routine_continue(t_philo *ph)
-{
-	if (ph->data->dead == 1)
-		return (0);
-	if (ph->data->must_eat != -1 && ph->data->must_eat == ph->times_eaten)
-		return (0);
-	return (1);
 }
 
 static void *poor_philo(t_data *data)
@@ -146,15 +101,15 @@ void	*routine2(void *philo)
 		routine_msg(EATING, ph);
 		// usleep(ph->data->time_to_eat * 1000);
 		incremental_sleep(ph->data, ph->data->time_to_eat * 1000);
-		if (should_routine_continue(ph))
-		{
-			ph->times_eaten++;
-			ph->last_meal = get_time();
-		}
-		else
-		{
-			return (NULL);
-		}
+		// if (should_routine_continue(ph))
+		// {
+		// 	ph->times_eaten++;
+		// 	ph->last_meal = get_time();
+		// }
+		// else
+		// {
+		// 	return (NULL);
+		// }
 		routine_msg("is sleeping\n", ph);
 		pthread_mutex_unlock(ph->left_fork);
 		pthread_mutex_unlock(ph->right_fork);

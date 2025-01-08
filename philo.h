@@ -26,6 +26,7 @@
 /** Macros **/
 # define PURPLE "\033[0;35m"
 # define CYAN "\033[0;36m"
+# define RED	"\033[0;31m"
 # define RESET "\033[0m"
 
 # define MAX_PHILOS 250
@@ -38,6 +39,10 @@ between 1 and 2147483647.\n"
 # define EATING "is eating\n"
 # define THINKING "is thinking\n"
 # define SLEEPING "is sleeping\n"
+
+#ifndef DEBUG
+ # define DEBUG false
+#endif
 
 typedef struct s_data	t_data;
 
@@ -70,11 +75,15 @@ typedef struct s_data
 int						init_data(t_data *data, int argc, char **argv);
 
 time_t					get_time(void);
+int						create_supervisor(t_data *data);
+
 void					free_data(t_data *data);
 int						simple_atoi(const char *str);
 size_t					ft_strlen(const char *s);
 int						contains_only_digits(char *str);
 int						msg(const char *msg);
+void	routine_msg(char *msg, t_philo *ph);
+
 int						clean_memory(t_data *data);
 
 void					*routine(void *philo);

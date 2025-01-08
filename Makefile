@@ -29,6 +29,7 @@ SRCS		=	main.c \
 				routine.c \
 				init.c \
 				parsing.c \
+				supervisor.c \
 				
 # SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRCS:.c=.o)

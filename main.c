@@ -19,38 +19,6 @@ static void	usage(void)
 optional:<number_of_times_each_philosopher_must_eat>\n");
 }
 
-bool	should_stop_dinner(t_data *data)
-{
-	// if (data->dead == 1)
-	// {
-	// 	printf("someone died\n");
-	// 	return (true);
-	// }
-	
-	return (false);
-}
-
-void	*supervise(void *arg)
-{
-	while (1)
-	{
-		//printf("supervising\n");
-		if (should_stop_dinner((t_data *)arg) == true)
-			return (NULL);
-		usleep(10000);
-	}
-	return (NULL);
-}
-
-int	create_supervisor(t_data *data)
-{
-	pthread_t	sp;
-
-	if (pthread_create(&sp, NULL, &supervise, (void *)data) != 0)
-		return (1);
-	return (0);
-}
-
 int	start_dinner(t_data *data)
 {
 	int	i;
