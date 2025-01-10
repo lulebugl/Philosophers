@@ -61,16 +61,16 @@ typedef struct s_philo
 
 typedef struct s_sim
 {
-	time_t				start;
 	unsigned int		nb_philo;
 	unsigned int		time_to_die;
 	unsigned int		time_to_eat;
 	unsigned int		time_to_sleep;
 	int					must_eat;
+	time_t				start;
 	pthread_mutex_t		*forks;
-	pthread_mutex_t		print;
+	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		stop_lock;
-	bool				stop;
+	bool				should_stop;
 	t_philo				*philo;
 }						t_sim;
 
