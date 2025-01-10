@@ -20,9 +20,16 @@ void	routine_msg(char *msg, t_philo *ph)
 	// 	pthread_mutex_unlock(&ph->sim->print_mutex);
 	// 	return ;
 	// }
-	if (msg)
+	if (DEBUG == true)
+	{
+		pthread_mutex_unlock(&ph->sim->print_mutex);
+		return ;
+	}
+	if (COLOR == true)
 		printf("%s%ld%s %d %s", CYAN, get_time_in_ms() - ph->sim->start, RESET,
 			ph->id, msg);
+	else
+		printf("%ld %d %s", get_time_in_ms() - ph->sim->start, ph->id, msg);
 	pthread_mutex_unlock(&ph->sim->print_mutex);
 }
 
@@ -38,7 +45,7 @@ bool	stop_sim(t_sim *sim)
 	return (status);
 }
 
-void wait_for_everyone(t_sim *sim)
+void	wait_for_everyone(t_sim *sim)
 {
 	while (get_time_in_ms() < sim->start)
 		continue ;
@@ -68,18 +75,18 @@ void	clean(t_sim *sim)
 		pthread_mutex_destroy(&sim->philo[i].meal_lock);
 	}
 	free(sim->forks);
-	free(sim->philo);
+	free(sim->philo);	
 	pthread_mutex_destroy(&sim->print_mutex);
 	pthread_mutex_destroy(&sim->stop_mutex);
 	memset(sim, 0, sizeof(t_sim));
 }
 
-time_t get_time_in_ms(void)
+time_t	get_time_in_ms(void)
 {
-    struct timeval tv;
-    
-    gettimeofday(&tv, NULL);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
 size_t	ft_strlen(const char *s)
@@ -91,3 +98,4 @@ size_t	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
+

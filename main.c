@@ -19,10 +19,9 @@ static void	usage(void)
 optional:<number_of_times_each_philosopher_must_eat>\n");
 }
 
-
 int	init_sim(t_sim *sim, int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	memset(sim, 0, sizeof(t_sim));
@@ -39,7 +38,7 @@ int	init_sim(t_sim *sim, int argc, char **argv)
 	pthread_mutex_init(&sim->print_mutex, NULL);
 	pthread_mutex_init(&sim->stop_mutex, NULL);
 	sim->should_stop = false;
-	sim->start = get_time_in_ms() + (sim->nb_philo * 2);
+	sim->start = get_time_in_ms() + (sim->nb_philo * PHILO_MS_INIT_TIME);
 	return (0);
 }
 
@@ -57,6 +56,8 @@ int	main(int argc, char **argv)
 	i = -1;
 	while (++i < sim.nb_philo)
 		pthread_join(sim.philo[i].th, NULL);
+	if (sim.nb_philo > 1)
+		pthread_join(sim.supervisor, NULL);
 	clean(&sim);
 	return (0);
 }

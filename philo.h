@@ -27,12 +27,17 @@
 #  define DEBUG false
 # endif
 
+# ifndef COLOR
+#  define COLOR false
+# endif
+
 # define PURPLE "\033[0;35m"
 # define CYAN "\033[0;36m"
 # define RED "\033[0;31m"
 # define RESET "\033[0m"
 
 # define MAX_PHILOS 250
+# define PHILO_MS_INIT_TIME 15
 
 # define MSG_DIED "died\n"
 # define MSG_FORK "has taken a fork\n"
@@ -66,6 +71,7 @@ typedef struct s_sim
 	unsigned int		time_to_sleep;
 	int					must_eat;
 	time_t				start;
+	pthread_t			supervisor;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		stop_mutex;

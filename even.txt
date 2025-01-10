@@ -1,0 +1,26 @@
+[0;36m0[0m 2 has taken a fork
+[0;36m0[0m 2 has taken a fork
+[0;36m0[0m 2 is eating
+[0;36m0[0m 1 has taken a fork
+[0;36m0[0m 4 has taken a fork
+[0;36m0[0m 4 has taken a fork
+[0;36m0[0m 4 is eating
+[0;31m200[0m 1 died
+[0;36m200[0m 4 is sleeping
+[0;36m200[0m 4 is thinking
+[0;36m200[0m 5 has taken a fork
+[0;36m200[0m 2 is sleeping
+[0;36m200[0m 2 is thinking
+[0;36m200[0m 3 has taken a fork
+[0;36m200[0m 3 has taken a fork
+[0;36m200[0m 3 is eating
+[0;36m200[0m 3 is sleeping
+[0;36m200[0m 3 is thinking
+[0;36m200[0m 1 has taken a fork
+[0;36m200[0m 1 is eating
+[0;36m200[0m 1 is sleeping
+[0;36m200[0m 1 is thinking
+[0;36m200[0m 5 has taken a fork
+[0;36m200[0m 5 is eating
+[0;36m200[0m 5 is sleeping
+[0;36m200[0m 5 is thinking

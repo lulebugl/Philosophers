@@ -43,12 +43,6 @@ static void	start_routine(t_philo *ph)
 	ph->last_meal = get_time_in_ms();
 	pthread_mutex_unlock(&ph->meal_lock);
 	incremental_sleep(sim, sim->time_to_eat);
-	if (ph->times_eaten == sim->must_eat)
-	{
-		pthread_mutex_unlock(ph->left_fork);
-		pthread_mutex_unlock(ph->right_fork);
-		return ;
-	}
 	if (stop_sim(sim) == false)
 	{
 		pthread_mutex_lock(&ph->meal_lock);
@@ -74,9 +68,9 @@ void	*philo(void *arg)
 	pthread_mutex_unlock(&philo->meal_lock);
 	wait_for_everyone(sim);
 	if (philo->id % 2)
-		usleep(500);
-	// if (sim->nb_philo == 1)
-	// 	return (poor_philo(sim));
+		usleep(200);
+	if (sim->nb_philo == 1)
+		return (poor_philo(sim));
 	while (stop_sim(sim) == false)
 	{
 		start_routine(philo);
