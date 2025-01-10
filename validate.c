@@ -40,10 +40,10 @@ static int	parse_param(const char *str)
 	return ((int)res);
 }
 
-static int	validate_param(unsigned int *dinner, char *param, char *param_name)
+static int	validate_param(unsigned int *sim, char *param, char *param_name)
 {
-	*dinner = parse_param(param);
-	if (dinner <= 0)
+	*sim = parse_param(param);
+	if (sim <= 0)
 	{
 		printf("%s must be a positive integer between 1 and 2147483647.\n",
 			param);
@@ -52,52 +52,29 @@ static int	validate_param(unsigned int *dinner, char *param, char *param_name)
 	return (1);
 }
 
-static int validate_params(t_dinner *dinner , int argc, char **argv)
+int validate_params(t_sim *sim , int argc, char **argv)
 {
-	dinner->must_eat = -1;
-	dinner->nb_philo = parse_param(argv[1]);
-	if (dinner->nb_philo < 1 || dinner->nb_philo > MAX_PHILOS)
+	sim->must_eat = -1;
+	sim->nb_philo = parse_param(argv[1]);
+	if (sim->nb_philo < 1 || sim->nb_philo > MAX_PHILOS)
 	{
 		printf("There must be between 1 and %d philosophers.\n", MAX_PHILOS);
 		return (1);
 	}
-	if (!validate_param(&dinner->time_to_die, argv[2], "<time to die>"))
+	if (!validate_param(&sim->time_to_die, argv[2], "<time to die>"))
 		return (1);
-	if (!validate_param(&dinner->time_to_eat, argv[3], "<time to eat>"))
+	if (!validate_param(&sim->time_to_eat, argv[3], "<time to eat>"))
 		return (1);
-	if (!validate_param(&dinner->time_to_sleep, argv[4], "<time to sleep>"))
+	if (!validate_param(&sim->time_to_sleep, argv[4], "<time to sleep>"))
 		return (1);
 	if (argc == 6)
 	{
-		dinner->must_eat = parse_param(argv[5]);
-		if (dinner->must_eat < 0)
+		sim->must_eat = parse_param(argv[5]);
+		if (sim->must_eat < 0)
 		{
-			printf(INV_MUST_EAT);
+			printf(ERR_MUST_EAT);
 			return (1);
 		}
 	}
-	return (0);
-}
-
-int	init_dinner(t_dinner *dinner, int argc, char **argv)
-{
-	int i;
-
-	i = -1;
-	memset(dinner, 0, sizeof(t_dinner));
-	// dinner->stop = false;
-	if (validate_params(dinner, argc, argv) != 0)
-		return (1);
-	dinner->forks = malloc(sizeof(pthread_mutex_t) * dinner->nb_philo);
-	if (!dinner->forks)
-		return (1);
-	dinner->philo = malloc(sizeof(t_philo) * dinner->nb_philo);
-	if (!dinner->philo)
-		return (free(dinner->forks), 1);
-	while (++i < dinner->nb_philo)
-		pthread_mutex_init(&dinner->forks[i], NULL);
-	pthread_mutex_init(&dinner->print, NULL);
-	pthread_mutex_init(&dinner->stop_lock, NULL);
-	dinner->start = get_time() + (dinner->nb_philo * 2);
 	return (0);
 }

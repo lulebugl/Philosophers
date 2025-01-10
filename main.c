@@ -19,49 +19,45 @@ static void	usage(void)
 optional:<number_of_times_each_philosopher_must_eat>\n");
 }
 
-int	start_dinner(t_dinner *dinner)
+
+int	init_sim(t_sim *sim, int argc, char **argv)
 {
-	int	i;
+	int i;
 
 	i = -1;
-	while (++i < dinner->nb_philo)
-	{
-		memset(&dinner->philo[i], 0, sizeof(t_philo));
-		dinner->philo[i].id = i + 1;
-		dinner->philo[i].dinner = dinner;
-		pthread_mutex_init(&dinner->philo[i].meal_lock, NULL);
-		dinner->philo[i].left_fork = &dinner->forks[i];
-		dinner->philo[i].right_fork = &dinner->forks[(i + 1) % dinner->nb_philo];
-		// pthread_mutex_lock(&dinner->philo[i].meal_lock);
-		// dinner->philo[i].last_meal = dinner->start;
-		// pthread_mutex_unlock(&dinner->philo[i].meal_lock);
-		// if (i % 2)
-		// 	usleep(dinner->time_to_eat / 2);
-		if (pthread_create(&dinner->philo[i].th, NULL, &routine,
-				(void *)&dinner->philo[i]) != 0)
-			return (clean(dinner), 1);
-	}
-	if (dinner->nb_philo > 1)
-		if (create_supervisor(dinner) != 0)
-			return (clean(dinner), 1);
+	memset(sim, 0, sizeof(t_sim));
+	if (validate_params(sim, argc, argv) != 0)
+		return (1);
+	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->nb_philo);
+	if (!sim->forks)
+		return (1);
+	sim->philo = malloc(sizeof(t_philo) * sim->nb_philo);
+	if (!sim->philo)
+		return (free(sim->forks), 1);
+	while (++i < sim->nb_philo)
+		pthread_mutex_init(&sim->forks[i], NULL);
+	pthread_mutex_init(&sim->print_mutex, NULL);
+	pthread_mutex_init(&sim->stop_mutex, NULL);
+	sim->should_stop = false;
+	sim->start = get_time_in_ms() + (sim->nb_philo * 2);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	t_dinner	dinner;
+	t_sim	sim;
 	int		i;
 
 	if (argc < 5 || argc > 6)
 		return (usage(), 0);
-	if (init_dinner(&dinner, argc, argv) != 0)
+	if (init_sim(&sim, argc, argv) != 0)
 		return (1);
-	if (start_dinner(&dinner))
+	if (start_sim(&sim))
 		return (1);
 	i = -1;
-	while (++i < dinner.nb_philo)
-		pthread_join(dinner.philo[i].th, NULL);
-	clean(&dinner);
+	while (++i < sim.nb_philo)
+		pthread_join(sim.philo[i].th, NULL);
+	clean(&sim);
 	return (0);
 }
 

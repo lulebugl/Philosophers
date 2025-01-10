@@ -25,10 +25,11 @@ OBJ_PATH = objs/
 
 SRCS		=	main.c \
 				utils.c \
-				clean.c \
-				dinner.c \
-				init.c \
+				validate.c \
+				sim.c		\
 				supervisor.c \
+				philosophers.c \
+				debug.c		\
 				
 # SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRCS:.c=.o)

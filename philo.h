@@ -34,12 +34,11 @@
 
 # define MAX_PHILOS 250
 
-
-# define MSG_DIED       "died\n"
-# define MSG_FORK       "has taken a fork\n"
-# define MSG_EATING     "is eating\n"
-# define MSG_THINKING   "is thinking\n"
-# define MSG_SLEEPING   "is sleeping\n"
+# define MSG_DIED "died\n"
+# define MSG_FORK "has taken a fork\n"
+# define MSG_EATING "is eating\n"
+# define MSG_THINKING "is thinking\n"
+# define MSG_SLEEPING "is sleeping\n"
 
 # define ERR_MUST_EAT \
 	"<number of times each philosopher must eat> must be a positive integer \
@@ -69,27 +68,44 @@ typedef struct s_sim
 	time_t				start;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		print_mutex;
-	pthread_mutex_t		stop_lock;
+	pthread_mutex_t		stop_mutex;
 	bool				should_stop;
 	t_philo				*philo;
 }						t_sim;
 
-int						init_dinner(t_dinner *dinner, int argc, char **argv);
+int						validate_params(t_sim *sim, int argc, char **argv);
 
-time_t					get_time(void);
-int						create_supervisor(t_dinner *dinner);
-void					wait_for_everyone(t_dinner *dinner);
-void					clean(t_dinner *dinner);
-int						simple_atoi(const char *str);
-size_t					ft_strlen(const char *s);
-int						contains_only_digits(char *str);
-int						msg(const char *msg);
+int						start_sim(t_sim *sim);
+
+void					*supervisor(void *arg);
+
+void					*philo(void *arg);
+
+/* utils.c */
 void					routine_msg(char *msg, t_philo *ph);
+size_t					ft_strlen(const char *s);
+bool					stop_sim(t_sim *sim);
+time_t					get_time_in_ms(void);
+void					wait_for_everyone(t_sim *sim);
+void					clean(t_sim *sim);
+void					incremental_sleep(t_sim *sim, time_t sleep_time);
 
-int						clean_memory(t_dinner *dinner);
+/* debug */
+void					debug_philo_config(t_sim *sim, int i);
 
-void					*routine(void *philo);
-int						launch_routines(t_dinner *dinner);
-time_t					elapsed_time(time_t start);
+// int						init_dinner(t_dinner *dinner, int argc,
+//							char **argv);
+
+// time_t					get_time(void);
+// int						create_supervisor(t_dinner *dinner);
+// int						contains_only_digits(char *str);
+// int						msg(const char *msg);
+// void					routine_msg(char *msg, t_philo *ph);
+
+// int						clean_memory(t_dinner *dinner);
+
+// void					*routine(void *philo);
+// int						launch_routines(t_dinner *dinner);
+// time_t					elapsed_time(time_t start);
 #endif
 
