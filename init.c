@@ -85,6 +85,7 @@ int	init_dinner(t_dinner *dinner, int argc, char **argv)
 
 	i = -1;
 	memset(dinner, 0, sizeof(t_dinner));
+	// dinner->stop = false;
 	if (validate_params(dinner, argc, argv) != 0)
 		return (1);
 	dinner->forks = malloc(sizeof(pthread_mutex_t) * dinner->nb_philo);
@@ -97,6 +98,6 @@ int	init_dinner(t_dinner *dinner, int argc, char **argv)
 		pthread_mutex_init(&dinner->forks[i], NULL);
 	pthread_mutex_init(&dinner->print, NULL);
 	pthread_mutex_init(&dinner->stop_lock, NULL);
-	dinner->start = get_time();
+	dinner->start = get_time() + (dinner->nb_philo * 2);
 	return (0);
 }

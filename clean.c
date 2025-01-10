@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-void	free_dinner(t_dinner *dinner)
+void	clean(t_dinner *dinner)
 {
 	int	i;
 

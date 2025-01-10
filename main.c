@@ -32,16 +32,18 @@ int	start_dinner(t_dinner *dinner)
 		pthread_mutex_init(&dinner->philo[i].meal_lock, NULL);
 		dinner->philo[i].left_fork = &dinner->forks[i];
 		dinner->philo[i].right_fork = &dinner->forks[(i + 1) % dinner->nb_philo];
-		if (i % 2)
-			usleep(dinner->time_to_eat / 2);
-		dinner->philo[i].last_meal = get_time();
+		// pthread_mutex_lock(&dinner->philo[i].meal_lock);
+		// dinner->philo[i].last_meal = dinner->start;
+		// pthread_mutex_unlock(&dinner->philo[i].meal_lock);
+		// if (i % 2)
+		// 	usleep(dinner->time_to_eat / 2);
 		if (pthread_create(&dinner->philo[i].th, NULL, &routine,
 				(void *)&dinner->philo[i]) != 0)
-			return (free_dinner(dinner), 1);
+			return (clean(dinner), 1);
 	}
 	if (dinner->nb_philo > 1)
 		if (create_supervisor(dinner) != 0)
-			return (free_dinner(dinner), 1);
+			return (clean(dinner), 1);
 	return (0);
 }
 
@@ -59,9 +61,7 @@ int	main(int argc, char **argv)
 	i = -1;
 	while (++i < dinner.nb_philo)
 		pthread_join(dinner.philo[i].th, NULL);
-	free_dinner(&dinner);
-	// if (launch_routines(&dinner) != 0)
-	// 	return (1);
+	clean(&dinner);
 	return (0);
 }
 
