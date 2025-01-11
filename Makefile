@@ -20,8 +20,8 @@ ifeq ($(MODE), debug)
 	CFLAGS	+= -fsanitize=thread -g
 endif
 
-# SRC_PATH = srcs/
-OBJ_PATH = objs/
+SRCS_PATH = srcs/
+OBJS_PATH = objs/
 
 SRCS		=	main.c \
 				utils.c \
@@ -31,21 +31,22 @@ SRCS		=	main.c \
 				philosophers.c \
 				debug.c		\
 				
-# SRCS	= $(addprefix $(SRC_PATH), $(SRC))
-OBJ		= $(SRCS:.c=.o)
-OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
+SRC	= $(addprefix $(SRCS_PATH), $(SRCS))
+OBJ	= $(SRCS:.c=.o)
+OBJS = $(addprefix $(OBJS_PATH), $(OBJ))
+INC = philo.h
 
 all: $(NAME)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir -p $(OBJ_PATH)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS_PATH)%.o: $(SRCS_PATH)%.c
+	@mkdir -p $(OBJS_PATH)
+	$(CC) $(CFLAGS) -I. -c $< -o $@
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 clean:
-	rm -rf $(OBJ_PATH)
+	rm -rf $(OBJS_PATH)
 
 fclean: clean
 	rm -f $(NAME)

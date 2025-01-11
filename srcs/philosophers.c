@@ -10,23 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
-// void init_philo(t_sim *sim, t_philo *philo, int pos)
-// {
-// 	memset(philo, 0, sizeof(t_philo));
-// 	philo->id = pos + 1;
-// 	philo->left_fork = &sim->forks[pos];
-// 	philo->right_fork = &sim->forks[(pos + 1) % sim->nb_philo];
-// 	pthread_mutex_init(&sim->philo[pos].meal_lock, NULL);
-// }
-
-static void	*poor_philo(t_sim *sim)
+static void	*poor_philo(t_philo *philo)
 {
-	routine_msg(MSG_FORK, sim->philo);
-	usleep(sim->time_to_die * 1000);
-	routine_msg(MSG_DIED, sim->philo);
+	pthread_mutex_lock(philo->left_fork);
+	routine_msg(MSG_FORK, philo);
+	incremental_sleep(philo->sim, philo->sim->time_to_die);
+	routine_msg(MSG_DIED, philo);
+	pthread_mutex_unlock(philo->left_fork);
 	return (NULL);
+}
+
+static void	think(t_philo *philo)
+{
+	time_t	time_to_think;
+
+	pthread_mutex_lock(&philo->meal_lock);
+	time_to_think = (philo->sim->time_to_die - (get_time_in_ms()
+				- philo->last_meal) - philo->sim->time_to_eat) / 2;
+	pthread_mutex_unlock(&philo->meal_lock);
+	if (time_to_think < 0)
+		time_to_think = 0;
+	if (time_to_think > philo->sim->time_to_eat)
+		time_to_think = philo->sim->time_to_eat / 2;
+	routine_msg(MSG_THINKING, philo);
+	incremental_sleep(philo->sim, time_to_think);
 }
 
 static void	start_routine(t_philo *ph)
@@ -53,8 +62,7 @@ static void	start_routine(t_philo *ph)
 	pthread_mutex_unlock(ph->left_fork);
 	pthread_mutex_unlock(ph->right_fork);
 	incremental_sleep(sim, sim->time_to_sleep);
-	routine_msg(MSG_THINKING, ph);
-	usleep(100);
+	think(ph);
 }
 
 void	*philo(void *arg)
@@ -68,13 +76,12 @@ void	*philo(void *arg)
 	philo->last_meal = sim->start;
 	pthread_mutex_unlock(&philo->meal_lock);
 	wait_for_everyone(sim);
-	if (philo->id % 2)
-		usleep(150);
 	if (sim->nb_philo == 1)
-		return (poor_philo(sim));
+		return (poor_philo(philo));
+	if (philo->id % 2)
+		incremental_sleep(sim, (sim->time_to_eat / 2));
 	while (stop_sim(sim) == false)
-	{
 		start_routine(philo);
-	}
 	return (NULL);
 }
+

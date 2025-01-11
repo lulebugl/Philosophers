@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 /*
 ** to avoid circular lock ordering
@@ -47,8 +47,8 @@ int	start_sim(t_sim *sim)
 			return (0);
 		/* Debug output */
 		// debug_philo_config(sim, i);
-		if (i % 2)
-			usleep(sim->time_to_eat / 2);
+		// if (i % 2)
+		// 	usleep(sim->time_to_eat / 2);
 		if (pthread_create(&sim->philo[i].th, NULL, &philo,
 				(void *)&sim->philo[i]) != 0)
 			return (clean(sim), 1);

@@ -36,7 +36,7 @@
 # define RED "\033[0;31m"
 # define RESET "\033[0m"
 
-# define MAX_PHILOS 250
+# define MAX_PHILOS 200
 # define PHILO_MS_INIT_TIME 15
 
 # define MSG_DIED "died\n"

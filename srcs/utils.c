@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 bool	stop_sim(t_sim *sim)
 {
@@ -26,22 +26,20 @@ bool	stop_sim(t_sim *sim)
 
 void	routine_msg(char *msg, t_philo *ph)
 {
+	time_t	timestamp;
+
+	timestamp = get_time_in_ms() - ph->sim->start;
 	pthread_mutex_lock(&ph->sim->print_mutex);
 	if (stop_sim(ph->sim) || DEBUG == true)
 	{
 		pthread_mutex_unlock(&ph->sim->print_mutex);
 		return ;
 	}
-	// if (DEBUG == true)
-	// {
-	// 	pthread_mutex_unlock(&ph->sim->print_mutex);
-	// 	return ;
-	// }
 	if (COLOR == true)
-		printf("%s%ld%s %d %s", CYAN, get_time_in_ms() - ph->sim->start, RESET,
+		printf("%s%ld%s %d %s", CYAN, timestamp, RESET,
 			ph->id, msg);
 	else
-		printf("%ld %d %s", get_time_in_ms() - ph->sim->start, ph->id, msg);
+		printf("%ld %d %s", timestamp, ph->id, msg);
 	pthread_mutex_unlock(&ph->sim->print_mutex);
 }
 
@@ -60,7 +58,7 @@ void	incremental_sleep(t_sim *sim, time_t sleep_time)
 	{
 		if (stop_sim(sim))
 			break ;
-		usleep(200);
+		usleep(100);
 	}
 }
 
@@ -75,7 +73,7 @@ void	clean(t_sim *sim)
 		pthread_mutex_destroy(&sim->philo[i].meal_lock);
 	}
 	free(sim->forks);
-	free(sim->philo);	
+	free(sim->philo);
 	pthread_mutex_destroy(&sim->print_mutex);
 	pthread_mutex_destroy(&sim->stop_mutex);
 	memset(sim, 0, sizeof(t_sim));

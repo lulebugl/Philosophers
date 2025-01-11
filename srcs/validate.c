@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
-
-#include "philo.h"
+#include "../philo.h"
 
 static int	parse_param(const char *str)
 {
@@ -42,17 +40,20 @@ static int	parse_param(const char *str)
 
 static int	validate_param(unsigned int *sim, char *param, char *param_name)
 {
-	*sim = parse_param(param);
-	if (sim <= 0)
+	int	n;
+
+	n = parse_param(param);
+	if (n <= 0)
 	{
 		printf("%s must be a positive integer between 1 and 2147483647.\n",
-			param);
+			param_name);
 		return (0);
 	}
+	*sim = (unsigned int)n;
 	return (1);
 }
 
-int validate_params(t_sim *sim , int argc, char **argv)
+int	validate_params(t_sim *sim, int argc, char **argv)
 {
 	sim->must_eat = -1;
 	sim->nb_philo = parse_param(argv[1]);
@@ -78,3 +79,4 @@ int validate_params(t_sim *sim , int argc, char **argv)
 	}
 	return (0);
 }
+

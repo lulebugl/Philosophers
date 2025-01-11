@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 void	debug_time_msg(t_philo *ph, const char *action, time_t wait_time)
 {
