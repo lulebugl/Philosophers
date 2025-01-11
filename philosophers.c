@@ -54,6 +54,7 @@ static void	start_routine(t_philo *ph)
 	pthread_mutex_unlock(ph->right_fork);
 	incremental_sleep(sim, sim->time_to_sleep);
 	routine_msg(MSG_THINKING, ph);
+	usleep(100);
 }
 
 void	*philo(void *arg)
@@ -68,7 +69,7 @@ void	*philo(void *arg)
 	pthread_mutex_unlock(&philo->meal_lock);
 	wait_for_everyone(sim);
 	if (philo->id % 2)
-		usleep(200);
+		usleep(150);
 	if (sim->nb_philo == 1)
 		return (poor_philo(sim));
 	while (stop_sim(sim) == false)

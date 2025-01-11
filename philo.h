@@ -98,6 +98,11 @@ void					incremental_sleep(t_sim *sim, time_t sleep_time);
 
 /* debug */
 void					debug_philo_config(t_sim *sim, int i);
+void					debug_time_msg(t_philo *ph, const char *action,
+							time_t wait_time);
+void					debug_fork_msg(t_philo *ph, const char *fork_name,
+							time_t wait_time);
+void					start_routine_debug(t_philo *ph);
 
 // int						init_dinner(t_dinner *dinner, int argc,
 //							char **argv);

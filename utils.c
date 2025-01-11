@@ -12,27 +12,6 @@
 
 #include "philo.h"
 
-void	routine_msg(char *msg, t_philo *ph)
-{
-	pthread_mutex_lock(&ph->sim->print_mutex);
-	// if (stop_sim(ph->sim) || DEBUG == true)
-	// {
-	// 	pthread_mutex_unlock(&ph->sim->print_mutex);
-	// 	return ;
-	// }
-	if (DEBUG == true)
-	{
-		pthread_mutex_unlock(&ph->sim->print_mutex);
-		return ;
-	}
-	if (COLOR == true)
-		printf("%s%ld%s %d %s", CYAN, get_time_in_ms() - ph->sim->start, RESET,
-			ph->id, msg);
-	else
-		printf("%ld %d %s", get_time_in_ms() - ph->sim->start, ph->id, msg);
-	pthread_mutex_unlock(&ph->sim->print_mutex);
-}
-
 bool	stop_sim(t_sim *sim)
 {
 	bool	status;
@@ -43,6 +22,27 @@ bool	stop_sim(t_sim *sim)
 		status = true;
 	pthread_mutex_unlock(&sim->stop_mutex);
 	return (status);
+}
+
+void	routine_msg(char *msg, t_philo *ph)
+{
+	pthread_mutex_lock(&ph->sim->print_mutex);
+	if (stop_sim(ph->sim) || DEBUG == true)
+	{
+		pthread_mutex_unlock(&ph->sim->print_mutex);
+		return ;
+	}
+	// if (DEBUG == true)
+	// {
+	// 	pthread_mutex_unlock(&ph->sim->print_mutex);
+	// 	return ;
+	// }
+	if (COLOR == true)
+		printf("%s%ld%s %d %s", CYAN, get_time_in_ms() - ph->sim->start, RESET,
+			ph->id, msg);
+	else
+		printf("%ld %d %s", get_time_in_ms() - ph->sim->start, ph->id, msg);
+	pthread_mutex_unlock(&ph->sim->print_mutex);
 }
 
 void	wait_for_everyone(t_sim *sim)
@@ -60,7 +60,7 @@ void	incremental_sleep(t_sim *sim, time_t sleep_time)
 	{
 		if (stop_sim(sim))
 			break ;
-		usleep(100);
+		usleep(200);
 	}
 }
 
