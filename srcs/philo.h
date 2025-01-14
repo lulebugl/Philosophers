@@ -28,7 +28,7 @@
 # endif
 
 # ifndef COLOR
-#  define COLOR false
+#  define COLOR true
 # endif
 
 # define PURPLE "\033[0;35m"
@@ -65,7 +65,7 @@ typedef struct s_philo
 
 typedef struct s_sim
 {
-	unsigned int		nb_philo;
+	int					nb_philo;
 	unsigned int		time_to_die;
 	unsigned int		time_to_eat;
 	unsigned int		time_to_sleep;
@@ -80,19 +80,16 @@ typedef struct s_sim
 }						t_sim;
 
 int						validate_params(t_sim *sim, int argc, char **argv);
-
 int						start_sim(t_sim *sim);
-
+int						init_sim(t_sim *sim, int argc, char **argv);
 void					*supervisor(void *arg);
-
 void					*philo(void *arg);
 
-/* utils.c */
-void					routine_msg(char *msg, t_philo *ph);
+/* utils */
 size_t					ft_strlen(const char *s);
 bool					stop_sim(t_sim *sim);
 time_t					get_time_in_ms(void);
-void					wait_for_everyone(t_sim *sim);
+void					wait_for_everyone(time_t start);
 void					clean(t_sim *sim);
 void					incremental_sleep(t_sim *sim, time_t sleep_time);
 
@@ -104,19 +101,4 @@ void					debug_fork_msg(t_philo *ph, const char *fork_name,
 							time_t wait_time);
 void					start_routine_debug(t_philo *ph);
 
-// int						init_dinner(t_dinner *dinner, int argc,
-//							char **argv);
-
-// time_t					get_time(void);
-// int						create_supervisor(t_dinner *dinner);
-// int						contains_only_digits(char *str);
-// int						msg(const char *msg);
-// void					routine_msg(char *msg, t_philo *ph);
-
-// int						clean_memory(t_dinner *dinner);
-
-// void					*routine(void *philo);
-// int						launch_routines(t_dinner *dinner);
-// time_t					elapsed_time(time_t start);
 #endif
-

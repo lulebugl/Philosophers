@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 bool	stop_sim(t_sim *sim)
 {
@@ -24,28 +24,9 @@ bool	stop_sim(t_sim *sim)
 	return (status);
 }
 
-void	routine_msg(char *msg, t_philo *ph)
+void	wait_for_everyone(time_t start)
 {
-	time_t	timestamp;
-
-	timestamp = get_time_in_ms() - ph->sim->start;
-	pthread_mutex_lock(&ph->sim->print_mutex);
-	if (stop_sim(ph->sim) || DEBUG == true)
-	{
-		pthread_mutex_unlock(&ph->sim->print_mutex);
-		return ;
-	}
-	if (COLOR == true)
-		printf("%s%ld%s %d %s", CYAN, timestamp, RESET,
-			ph->id, msg);
-	else
-		printf("%ld %d %s", timestamp, ph->id, msg);
-	pthread_mutex_unlock(&ph->sim->print_mutex);
-}
-
-void	wait_for_everyone(t_sim *sim)
-{
-	while (get_time_in_ms() < sim->start)
+	while (get_time_in_ms() < start)
 		continue ;
 }
 
@@ -86,14 +67,3 @@ time_t	get_time_in_ms(void)
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-

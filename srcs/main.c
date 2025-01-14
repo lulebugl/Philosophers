@@ -10,36 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 static void	usage(void)
 {
 	printf("usage: ./philo <number_of_philosophers> <time_to_die> \
 <time_to_eat> <time_to_sleep> \
 optional:<number_of_times_each_philosopher_must_eat>\n");
-}
-
-int	init_sim(t_sim *sim, int argc, char **argv)
-{
-	int	i;
-
-	i = -1;
-	memset(sim, 0, sizeof(t_sim));
-	if (validate_params(sim, argc, argv) != 0)
-		return (1);
-	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->nb_philo);
-	if (!sim->forks)
-		return (1);
-	sim->philo = malloc(sizeof(t_philo) * sim->nb_philo);
-	if (!sim->philo)
-		return (free(sim->forks), 1);
-	while (++i < sim->nb_philo)
-		pthread_mutex_init(&sim->forks[i], NULL);
-	pthread_mutex_init(&sim->print_mutex, NULL);
-	pthread_mutex_init(&sim->stop_mutex, NULL);
-	sim->should_stop = false;
-	sim->start = get_time_in_ms() + (sim->nb_philo * PHILO_MS_INIT_TIME);
-	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -53,12 +30,11 @@ int	main(int argc, char **argv)
 		return (1);
 	if (start_sim(&sim))
 		return (1);
-	i = -1;
+	i = 0;
 	while (++i < sim.nb_philo)
-		pthread_join(sim.philo[i].th, NULL);
+		pthread_join(sim.philo[i++].th, NULL);
 	if (sim.nb_philo > 1)
 		pthread_join(sim.supervisor, NULL);
 	clean(&sim);
 	return (0);
 }
-

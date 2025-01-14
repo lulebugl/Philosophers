@@ -10,7 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
+
+static void	routine_msg(char *msg, t_philo *ph)
+{
+	time_t	timestamp;
+
+	timestamp = get_time_in_ms() - ph->sim->start;
+	pthread_mutex_lock(&ph->sim->print_mutex);
+	if (stop_sim(ph->sim) || DEBUG == true)
+	{
+		pthread_mutex_unlock(&ph->sim->print_mutex);
+		return ;
+	}
+	if (COLOR == true)
+		printf("%s%ld%s %d %s", CYAN, timestamp, RESET, ph->id, msg);
+	else
+		printf("%ld %d %s", timestamp, ph->id, msg);
+	pthread_mutex_unlock(&ph->sim->print_mutex);
+}
 
 static void	*poor_philo(t_philo *philo)
 {
@@ -25,10 +43,11 @@ static void	*poor_philo(t_philo *philo)
 static void	think(t_philo *philo)
 {
 	time_t	time_to_think;
+	time_t	time_left;
 
 	pthread_mutex_lock(&philo->meal_lock);
-	time_to_think = (philo->sim->time_to_die - (get_time_in_ms()
-				- philo->last_meal) - philo->sim->time_to_eat) / 2;
+	time_left = philo->sim->time_to_die - (get_time_in_ms() - philo->last_meal);
+	time_to_think = (time_left - philo->sim->time_to_eat) / 2;
 	pthread_mutex_unlock(&philo->meal_lock);
 	if (time_to_think < 0)
 		time_to_think = 0;
@@ -75,7 +94,7 @@ void	*philo(void *arg)
 	pthread_mutex_lock(&philo->meal_lock);
 	philo->last_meal = sim->start;
 	pthread_mutex_unlock(&philo->meal_lock);
-	wait_for_everyone(sim);
+	wait_for_everyone(sim->start);
 	if (sim->nb_philo == 1)
 		return (poor_philo(philo));
 	if (philo->id % 2)
@@ -84,4 +103,3 @@ void	*philo(void *arg)
 		start_routine(philo);
 	return (NULL);
 }
-

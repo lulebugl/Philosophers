@@ -10,7 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 static int	parse_param(const char *str)
 {
@@ -56,7 +66,7 @@ static int	validate_param(unsigned int *sim, char *param, char *param_name)
 int	validate_params(t_sim *sim, int argc, char **argv)
 {
 	sim->must_eat = -1;
-	sim->nb_philo = parse_param(argv[1]);
+	sim->nb_philo = (int)parse_param(argv[1]);
 	if (sim->nb_philo < 1 || sim->nb_philo > MAX_PHILOS)
 	{
 		printf("There must be between 1 and %d philosophers.\n", MAX_PHILOS);
@@ -79,4 +89,3 @@ int	validate_params(t_sim *sim, int argc, char **argv)
 	}
 	return (0);
 }
-

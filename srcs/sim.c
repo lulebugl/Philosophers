@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 /*
 ** to avoid circular lock ordering
 ** Even numbered philosophers take right fork first
 ** Odd numbered philosophers take left fork first
 */
-void	init_philo(t_sim *sim, t_philo *philo, int pos)
+static void	init_philo(t_sim *sim, t_philo *philo, int pos)
 {
 	memset(philo, 0, sizeof(t_philo));
 	philo->id = pos + 1;
@@ -35,6 +35,29 @@ void	init_philo(t_sim *sim, t_philo *philo, int pos)
 	pthread_mutex_init(&sim->philo[pos].meal_lock, NULL);
 }
 
+int	init_sim(t_sim *sim, int argc, char **argv)
+{
+	int	i;
+
+	i = 0;
+	memset(sim, 0, sizeof(t_sim));
+	if (validate_params(sim, argc, argv) != 0)
+		return (1);
+	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->nb_philo);
+	if (!sim->forks)
+		return (1);
+	sim->philo = malloc(sizeof(t_philo) * sim->nb_philo);
+	if (!sim->philo)
+		return (free(sim->forks), 1);
+	while (i < sim->nb_philo)
+		pthread_mutex_init(&sim->forks[i++], NULL);
+	pthread_mutex_init(&sim->print_mutex, NULL);
+	pthread_mutex_init(&sim->stop_mutex, NULL);
+	sim->should_stop = false;
+	sim->start = get_time_in_ms() + (sim->nb_philo * PHILO_MS_INIT_TIME);
+	return (0);
+}
+
 int	start_sim(t_sim *sim)
 {
 	int	i;
@@ -45,10 +68,6 @@ int	start_sim(t_sim *sim)
 		init_philo(sim, &sim->philo[i], i);
 		if (sim->must_eat == 0)
 			return (0);
-		/* Debug output */
-		// debug_philo_config(sim, i);
-		// if (i % 2)
-		// 	usleep(sim->time_to_eat / 2);
 		if (pthread_create(&sim->philo[i].th, NULL, &philo,
 				(void *)&sim->philo[i]) != 0)
 			return (clean(sim), 1);
@@ -59,4 +78,3 @@ int	start_sim(t_sim *sim)
 			return (clean(sim), 1);
 	return (0);
 }
-

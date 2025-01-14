@@ -13,8 +13,7 @@
 
 NAME	= philo
 CC		= cc
-#CFLAGS	= -Werror -Wall -Wextra -pthread
-CFLAGS	= -pthread
+CFLAGS	= -Werror -Wall -Wextra -pthread
 MODE = none
 ifeq ($(MODE), debug)
 	CFLAGS	+= -fsanitize=thread -g

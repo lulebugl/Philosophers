@@ -10,15 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 static bool	someone_died(t_philo *ph)
 {
 	time_t	last_meal;
 
 	last_meal = get_time_in_ms() - ph->last_meal;
-	// printf("%s%ld%s %d %s", RED, last_meal, RESET,
-	// 	ph->id, "last meal\n");
 	if (last_meal >= ph->sim->time_to_die)
 	{
 		pthread_mutex_lock(&ph->sim->stop_mutex);
@@ -52,7 +50,7 @@ bool	should_stop_sim(t_sim *sim)
 		pthread_mutex_lock(&ph[i].meal_lock);
 		if (someone_died(&ph[i]))
 			return (true);
-		if (sim->must_eat != -1 && ph[i].times_eaten < sim->must_eat)
+		if (sim->must_eat != -1 && (int)ph[i].times_eaten < sim->must_eat)
 			finished_eating = false;
 		pthread_mutex_unlock(&ph[i].meal_lock);
 	}
@@ -76,7 +74,7 @@ void	*supervisor(void *arg)
 	pthread_mutex_lock(&sim->stop_mutex);
 	sim->should_stop = false;
 	pthread_mutex_unlock(&sim->stop_mutex);
-	wait_for_everyone(sim);
+	wait_for_everyone(sim->start);
 	usleep(1000);
 	while (1)
 	{
@@ -86,4 +84,3 @@ void	*supervisor(void *arg)
 	}
 	return (NULL);
 }
-

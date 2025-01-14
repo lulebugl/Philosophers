@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 void	debug_time_msg(t_philo *ph, const char *action, time_t wait_time)
 {
@@ -41,6 +41,24 @@ void	debug_fork_msg(t_philo *ph, const char *fork_name, time_t wait_time)
 	}
 }
 
+void	debug_philo_config(t_sim *sim, int i)
+{
+	printf("\n\033[0;36m=== Philosopher %d Configuration ===\033[0m\n", i + 1);
+	printf("Position: %d\n", i);
+	printf("Thread ID: %lu\n", sim->philo[i].th);
+	printf("Philosopher ID: %d\n", sim->philo[i].id);
+	printf("Left fork: %p (index: %d)\n", (void *)sim->philo[i].left_fork, i);
+	printf("Right fork: %p (index: %d)\n", (void *)sim->philo[i].right_fork, (i
+			+ 1) % sim->nb_philo);
+	printf("Times eaten: %u\n", sim->philo[i].times_eaten);
+	printf("Last meal time: %ld\n", sim->philo[i].last_meal);
+	printf("Simulation parameters:\n");
+	printf("  Time to die: %u\n", sim->time_to_die);
+	printf("  Time to eat: %u\n", sim->time_to_eat);
+	printf("  Time to sleep: %u\n", sim->time_to_sleep);
+	printf("============================\n\n");
+}
+
 // void	start_routine_debug(t_philo *ph)
 // {
 //     t_sim	*sim;
@@ -49,7 +67,7 @@ void	debug_fork_msg(t_philo *ph, const char *fork_name, time_t wait_time)
 
 //     sim = ph->sim;
 //     start_wait = get_time_in_ms();
-    
+
 //     // Try to get first fork
 //     pthread_mutex_lock(ph->left_fork);
 //     fork_wait = get_time_in_ms() - start_wait;
@@ -71,7 +89,7 @@ void	debug_fork_msg(t_philo *ph, const char *fork_name, time_t wait_time)
 //     pthread_mutex_lock(&ph->meal_lock);
 //     ph->last_meal = get_time_in_ms();
 //     pthread_mutex_unlock(&ph->meal_lock);
-    
+
 //     incremental_sleep(sim, sim->time_to_eat);
 //     if (stop_sim(sim) == false)
 //     {
@@ -79,33 +97,14 @@ void	debug_fork_msg(t_philo *ph, const char *fork_name, time_t wait_time)
 //         ph->times_eaten++;
 //         pthread_mutex_unlock(&ph->meal_lock);
 //     }
-    
+
 //     routine_msg(MSG_SLEEPING, ph);
 //     pthread_mutex_unlock(ph->left_fork);
 //     pthread_mutex_unlock(ph->right_fork);
-    
+
 //     time_t cycle_time = get_time_in_ms() - start_wait;
 //     debug_time_msg(ph, "Complete cycle", cycle_time);
-    
+
 //     incremental_sleep(sim, sim->time_to_sleep);
 //     routine_msg(MSG_THINKING, ph);
 // }
-
-void	debug_philo_config(t_sim *sim, int i)
-{
-	printf("\n\033[0;36m=== Philosopher %d Configuration ===\033[0m\n", i + 1);
-	printf("Position: %d\n", i);
-	printf("Thread ID: %lu\n", sim->philo[i].th);
-	printf("Philosopher ID: %d\n", sim->philo[i].id);
-	printf("Left fork: %p (index: %d)\n", (void *)sim->philo[i].left_fork, i);
-	printf("Right fork: %p (index: %d)\n", (void *)sim->philo[i].right_fork, (i
-			+ 1) % sim->nb_philo);
-	printf("Times eaten: %u\n", sim->philo[i].times_eaten);
-	printf("Last meal time: %ld\n", sim->philo[i].last_meal);
-	printf("Simulation parameters:\n");
-	printf("  Time to die: %u\n", sim->time_to_die);
-	printf("  Time to eat: %u\n", sim->time_to_eat);
-	printf("  Time to sleep: %u\n", sim->time_to_sleep);
-	printf("============================\n\n");
-}
-
