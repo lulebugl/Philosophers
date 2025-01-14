@@ -12,29 +12,6 @@
 
 #include "philo.h"
 
-/*
-** to avoid circular lock ordering
-** Even numbered philosophers take right fork first
-** Odd numbered philosophers take left fork first
-*/
-static void	init_philo(t_sim *sim, t_philo *philo, int pos)
-{
-	memset(philo, 0, sizeof(t_philo));
-	philo->id = pos + 1;
-	philo->sim = sim;
-	if (philo->id % 2 == 0)
-	{
-		philo->right_fork = &sim->forks[pos];
-		philo->left_fork = &sim->forks[(pos + 1) % sim->nb_philo];
-	}
-	else
-	{
-		philo->left_fork = &sim->forks[pos];
-		philo->right_fork = &sim->forks[(pos + 1) % sim->nb_philo];
-	}
-	pthread_mutex_init(&sim->philo[pos].meal_lock, NULL);
-}
-
 int	init_sim(t_sim *sim, int argc, char **argv)
 {
 	int	i;
@@ -56,6 +33,29 @@ int	init_sim(t_sim *sim, int argc, char **argv)
 	sim->should_stop = false;
 	sim->start = get_time_in_ms() + (sim->nb_philo * PHILO_MS_INIT_TIME);
 	return (0);
+}
+
+/*
+** to avoid circular lock ordering
+** Even numbered philosophers take right fork first
+** Odd numbered philosophers take left fork first
+*/
+static void	init_philo(t_sim *sim, t_philo *philo, int pos)
+{
+	memset(philo, 0, sizeof(t_philo));
+	philo->id = pos + 1;
+	philo->sim = sim;
+	if (philo->id % 2 == 0)
+	{
+		philo->right_fork = &sim->forks[pos];
+		philo->left_fork = &sim->forks[(pos + 1) % sim->nb_philo];
+	}
+	else
+	{
+		philo->left_fork = &sim->forks[pos];
+		philo->right_fork = &sim->forks[(pos + 1) % sim->nb_philo];
+	}
+	pthread_mutex_init(&sim->philo[pos].meal_lock, NULL);
 }
 
 int	start_sim(t_sim *sim)
