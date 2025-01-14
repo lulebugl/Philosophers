@@ -6,7 +6,7 @@
 /*   By: llebugle <lucas.lebugle@student.s19.b      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:03:43 by llebugle          #+#    #+#             */
-/*   Updated: 2025/01/03 17:03:50 by llebugle         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:39:23 by llebugle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # endif
 
 # ifndef COLOR
-#  define COLOR true
+#  define COLOR false
 # endif
 
 # define PURPLE "\033[0;35m"
