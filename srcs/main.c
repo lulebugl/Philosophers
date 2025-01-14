@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 	if (start_sim(&sim))
 		return (1);
 	i = 0;
-	while (++i < sim.nb_philo)
+	while (i < sim.nb_philo)
 		pthread_join(sim.philo[i++].th, NULL);
 	if (sim.nb_philo > 1)
 		pthread_join(sim.supervisor, NULL);
